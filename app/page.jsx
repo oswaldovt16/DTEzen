@@ -534,8 +534,8 @@ export default function Home() {
             </div>
             <div className="footer-col">
               <h4>Legal</h4>
-              <a href="/terminos">Términos y Condiciones</a>
-              <a href="/privacidad">Política de privacidad</a>
+              <a href="app.dtezen.com/terminos?">Términos y Condiciones</a>
+              <a href="app.dtezen.com/privacidad?">Política de privacidad</a>
             </div>
           </div>
         </footer>
