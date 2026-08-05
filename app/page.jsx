@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from 'react'
 const SIGNUP_URL  = 'https://app.dtezen.com/registro?view=signup'
 const LOGIN_URL   = 'https://app.dtezen.com/registro?view=login'
 
-// Precios de tu código original
 const PRICING_DATA = {
   essential: {
     quarterly: { monthly: "$11.00", total: "Total 3 meses: $33.00 + IVA" },
@@ -31,6 +30,10 @@ export default function Home() {
   const [viewMode, setViewMode]       = useState('landing')
   const [menuOpen, setMenuOpen]       = useState(false)
 
+  // Estados dinámicos para la animación de la Red Contable
+  const [packetFmt, setPacketFmt]     = useState({ text: 'JSON', bg: '#ff2f6d' })
+  const [fileLabel, setFileLabel]     = useState('DTE_Emitido.json')
+
   const changeView = (view) => {
     setViewMode(view)
     setMenuOpen(false)
@@ -53,6 +56,20 @@ export default function Home() {
     }, 70)
     return () => clearInterval(tick)
   }, [viewMode])
+
+  // Lógica de actualización de archivos Red Contable
+  useEffect(() => {
+    const fmts   = ['JSON', 'XLS', 'PDF']
+    const labels = ['DTE_Emitido.json', 'Reporte_Mensual.xls', 'Factura_Fiscal.pdf']
+    const colors = ['#ff2f6d', '#10b981', '#2563eb']
+    let idx = 0
+    const iv = setInterval(() => {
+      idx = (idx + 1) % fmts.length
+      setPacketFmt({ text: fmts[idx], bg: colors[idx] })
+      setFileLabel(labels[idx])
+    }, 3000)
+    return () => clearInterval(iv)
+  }, [])
 
   // Carrusel nativo
   const carouselRef = useRef(null)
@@ -92,7 +109,7 @@ export default function Home() {
 
   // Reveal en Scroll
   useEffect(() => {
-    const els = document.querySelectorAll('.reveal')
+    const els = document.querySelectorAll('.reveal, .reveal-premium-fade')
     const obs = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible') }), { threshold: 0.14 })
     els.forEach(el => obs.observe(el))
     return () => obs.disconnect()
@@ -100,7 +117,6 @@ export default function Home() {
 
   const toggleExpand = plan => setExpanded(p => ({ ...p, [plan]: !p[plan] }))
 
-  // Manejo de Resend via API
   const handleContact = async e => {
     e.preventDefault()
     const f = e.target
@@ -119,7 +135,6 @@ export default function Home() {
     }
   }
 
-  // Tarjeta de Precios (Fiel a tu diseño y textos)
   const PlanCard = ({ plan, label, desc, featured, badge, setupNote, setupClass = 'setup-note', features }) => {
     const data = PRICING_DATA[plan][period]
     const visible = 5
@@ -133,15 +148,12 @@ export default function Home() {
           <strong data-price>{data.monthly}</strong><span>/mes</span>
         </div>
         <div className="period-total" data-total>{data.total}</div>
-        
         <div className={setupClass} dangerouslySetInnerHTML={{ __html: setupNote }} />
-        
         <ul className="feature-list" data-visible-items="5">
           {features.map((f, i) => (
             <li key={i} className={!isExpanded && i >= visible ? 'is-hidden' : ''}>{f}</li>
           ))}
         </ul>
-        
         {features.length > visible && (
           <button className="show-more-btn" onClick={() => toggleExpand(plan)}>
             {isExpanded ? 'Ver menos' : 'Ver más'}
@@ -202,7 +214,6 @@ export default function Home() {
 
         {viewMode === 'landing' && (
           <div className="view-transition">
-            
             <header className="hero">
               <div className="hero-content reveal">
                 <h1 className="hero-title">
@@ -429,7 +440,6 @@ export default function Home() {
               <div className="country-inner reveal">
                 <h2>Tu solución moderna de facturación electrónica en <span>El Salvador 🇸🇻</span></h2>
                 <p>Diseñada para pequeñas, medianas y grandes empresas que quieren cumplir con Hacienda sin complicarse.</p>
-
                 <div className="doc-orbit">
                   <div className="doc-card"></div>
                   <div className="doc-card"></div>
@@ -474,17 +484,140 @@ export default function Home() {
           </div>
         )}
 
-        {/* ── VISTA SIMULADA: RED CONTABLE ── */}
+        {/* ── LA VISTA COMPLETA Y ANIMADA DE LA RED CONTABLE ── */}
         {viewMode === 'red-contable' && (
-          <div className="view-transition" style={{ minHeight: '80vh', padding: '120px 24px 60px' }}>
-             <div className="section-header reveal">
-                <span className="eyebrow">Red Contable DTEzen</span>
-                <h2 style={{ fontSize: 'clamp(34px, 5vw, 64px)' }}>Sincronización total con tu Contador</h2>
-                <p>Una infraestructura digital que automatiza la relación fiscal entre tu negocio y el despacho. Adiós correos sueltos y mensajes de WhatsApp a fin de mes.</p>
-                <div style={{ marginTop: 40, textAlign: 'center' }}>
-                  <button className="btn-dark" onClick={() => changeView('landing')}>← Volver a Facturación</button>
+          <div className="view-transition" style={{ paddingTop: '100px', minHeight: '80vh' }}>
+            
+            <section className="section accountant-white-section" id="red-contable-info">
+              <div className="section-header reveal-premium-fade text-center">
+                <span className="eyebrow-premium">Red Contable DTEzen</span>
+                <h2>Sincronización absoluta entre empresas y despachos</h2>
+                <p>Una infraestructura digital diseñada para automatizar la contabilidad, disponible exclusivamente en nuestros planes Intermedio y Avanzado.</p>
+              </div>
+
+              <div className="premium-feature-grid reveal-premium-fade" style={{ animationDelay: '0.2s' }}>
+                <div className="premium-text-card">
+                  <div className="plan-tag-premium">Módulo Exclusivo</div>
+                  <h3>Incentiva el cumplimiento, opera con claridad</h3>
+                  <p>
+                    DTEzen transforma la relación con tus aliados fiscales. Al activar la Red Contable, dotas a tu despacho o empresa de un ecosistema interconectado basado en precisión técnica.
+                  </p>
+                  
+                  <div className="premium-bullets">
+                    <div className="p-bullet">
+                      <span className="p-bullet-icon">●</span>
+                      <div>
+                        <strong>Código Único de Aliado:</strong> Cada usuario que se registra usando tu código personalizado queda enlazado a tu panel de control de forma inmediata y automatizada.
+                      </div>
+                    </div>
+                    <div className="p-bullet">
+                      <span className="p-bullet-icon">●</span>
+                      <div>
+                        <strong>Comprometido con el medio ambiente:</strong> Ya no necesitarás imprimir ningún papel físico, toda la información está en linea al instante.
+                      </div>
+                    </div>
+                    <div className="p-bullet">
+                      <span className="p-bullet-icon">●</span>
+                      <div>
+                        <strong>Cumplimiento Fiscal Automatizado:</strong> Tu contador accede directamente a los DTES emitidos, archivos JSON de Hacienda y reportes mensuales sin fricciones.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="premium-visual-card">
+                  <div className="subtle-glow-bg"></div>
+                  <div className="clean-mail-container">
+                    <div className="mail-top-bar">
+                      <div className="mail-dots"><span></span><span></span><span></span></div>
+                      <div className="mail-subject">Red Contable DTEzen — Activación</div>
+                    </div>
+                    <div className="mail-content-area">
+                      <span className="mail-tag">RED CONTABLE</span>
+                      <h4>Bienvenido a la Red Contable</h4>
+                      <p>Tus clientes deberán ingresar este código durante su activación para asociar su empresa contigo.</p>
+                      <div className="mail-code-box">
+                        <span className="code-title">Código de Aliado</span>
+                        <div className="code-value">DTEZEN-AL026</div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
+            </section>
+
+            <section className="section accountant-animation-section">
+              <div className="section-header reveal-premium-fade text-center" style={{ animationDelay: '0.3s' }}>
+                <span className="eyebrow-premium">Flujo en Tiempo Real</span>
+                <h2>La anatomía de la automatización</h2>
+                <p>Mira cómo viajan los datos tributarios y se procesan los balances en automático.</p>
+              </div>
+
+              <div className="animation-workspace reveal-premium-fade" style={{ animationDelay: '0.4s' }}>
+                <div className="workspace-panel emisor-panel">
+                  <div className="panel-header">
+                    <div className="panel-dot status-blue"></div>
+                    <span>Dashboard Empresa (Cliente)</span>
+                  </div>
+                  <div className="panel-body">
+                    <div className="mock-metric-box">
+                      <span className="m-title">Emisión Mensual</span>
+                      <span className="m-number">128 DTEs</span>
+                    </div>
+                    <div className="mock-action-row">
+                      <div className="mock-bar-line w-80"></div>
+                      <div className="mock-bar-line w-60"></div>
+                    </div>
+                    <div className="invoice-file-display">
+                      <span>{fileLabel}</span>
+                      <span className="success-indicator">✓ Enviado</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="workspace-pipeline">
+                  <svg className="pipeline-svg" viewBox="0 0 200 100" preserveAspectRatio="none">
+                    <path d="M 0 50 Q 100 20 200 50" fill="none" stroke="#e2e8f0" strokeWidth="2" strokeLinecap="round"/>
+                    <path className="animated-data-stream" d="M 0 50 Q 100 20 200 50" fill="none" stroke="url(#premium-flow-grad)" strokeWidth="3" strokeLinecap="round"/>
+                    <defs>
+                      <linearGradient id="premium-flow-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="#2563eb" />
+                        <stop offset="50%" stopColor="#ff2f6d" />
+                        <stop offset="100%" stopColor="#10b981" />
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                  <div className="floating-data-packet" style={{ backgroundColor: packetFmt.bg }}>
+                    {packetFmt.text}
+                  </div>
+                </div>
+
+                <div className="workspace-panel contador-panel">
+                  <div className="panel-header">
+                    <div className="panel-dot status-green"></div>
+                    <span>Portal Red Contable (Contador)</span>
+                  </div>
+                  <div className="panel-body">
+                    <div className="client-connection-row">
+                      <div className="connection-avatar">👥</div>
+                      <div className="connection-details">
+                        <span className="c-name">Cliente Vinculado</span>
+                        <span className="c-status">Enlace Activo (Código Usado)</span>
+                      </div>
+                    </div>
+                    <div className="reward-payout-box">
+                      <span className="r-label">Clientes Aliados</span>
+                      <span className="r-amount">10</span>
+                      <div className="payout-badge">Sincronizado</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div style={{ marginTop: 60, textAlign: 'center' }}>
+                <button className="btn-dark" onClick={() => changeView('landing')}>← Volver a Facturación DTE</button>
+              </div>
+            </section>
           </div>
         )}
 
@@ -534,8 +667,8 @@ export default function Home() {
             </div>
             <div className="footer-col">
               <h4>Legal</h4>
-              <a href="app.dtezen.com/terminos?">Términos y Condiciones</a>
-              <a href="app.dtezen.com/privacidad?">Política de privacidad</a>
+              <a href="https://app.dtezen.com/terminos">Términos y Condiciones</a>
+              <a href="https://app.dtezen.com/privacidad">Política de privacidad</a>
             </div>
           </div>
         </footer>
