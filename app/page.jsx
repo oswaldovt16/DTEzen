@@ -654,7 +654,7 @@ export default function Home() {
         <footer className="footer">
           <div className="footer-inner">
             <div>
-              <img src="/logo.png" alt="DTEzen" style={{ height: '32px', filter: 'brightness(0) invert(1)', marginBottom: 12 }} />
+              <img src="/logo.png" alt="DTEzen" style={{ height: '62px', filter: 'brightness(0) invert(1)', marginBottom: 12 }} />
               <p className="footer-copy">© 2026 DTEzen. Todos los derechos reservados.</p>
             </div>
             <div className="footer-col">
