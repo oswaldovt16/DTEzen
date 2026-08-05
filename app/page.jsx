@@ -4,44 +4,40 @@ import { useEffect, useRef, useState } from 'react'
 const SIGNUP_URL  = 'https://app.dtezen.com/registro?view=signup'
 const LOGIN_URL   = 'https://app.dtezen.com/registro?view=login'
 
-// Precios
-const PRICING = {
+// Precios de tu código original
+const PRICING_DATA = {
   essential: {
-    quarterly:  { monthly: '$11.00', total: 'Total 3 meses: $33.00 + IVA' },
-    semiannual: { monthly: '$9.90',  total: 'Ahorra 5% · 6 meses × $62.70 + IVA' },
-    annual:     { monthly: '$8.75',  total: '15% descuento · 1 año × $118.80 + IVA' },
+    quarterly: { monthly: "$11.00", total: "Total 3 meses: $33.00 + IVA" },
+    semiannual: { monthly: "$9.90", total: "Ahorra 5% · 6 meses x $62.70 + IVA" },
+    annual: { monthly: "$8.75", total: "15% de descuento · 1 año x $118.80 + IVA" }
   },
   pyme: {
-    quarterly:  { monthly: '$22.00', total: 'Total 3 meses: $66.00 + IVA' },
-    semiannual: { monthly: '$19.80', total: 'Ahorra 5% · 6 meses × $125.40 + IVA' },
-    annual:     { monthly: '$17.60', total: '15% descuento · 1 año × $237.60 + IVA' },
+    quarterly: { monthly: "$22.00", total: "Total 3 meses: $66.00 + IVA" },
+    semiannual: { monthly: "$19.80", total: "Ahorra 5% · 6 meses x $125.40 + IVA" },
+    annual: { monthly: "$17.60", total: "15% de descuento · 1 año x $237.60 + IVA" }
   },
   maxima: {
-    quarterly:  { monthly: '$45.00', total: 'Total 3 meses: $135.00 + IVA' },
-    semiannual: { monthly: '$40.50', total: 'Ahorra 5% · 6 meses × $256.00 + IVA' },
-    annual:     { monthly: '$36.00', total: '15% descuento · 1 año × $486.00 + IVA' },
-  },
+    quarterly: { monthly: "$45.00", total: "Total 3 meses: $135.00 + IVA" },
+    semiannual: { monthly: "$40.50", total: "Ahorra 5% · 6 meses x $256.00 + IVA" },
+    annual: { monthly: "$36.00", total: "15% de descuento · 1 año x $486.00 + IVA" }
+  }
 }
 
 export default function Home() {
   const [period, setPeriod]           = useState('quarterly')
   const [expanded, setExpanded]       = useState({})
   const [formStatus, setFormStatus]   = useState('')
-  const [packetFmt, setPacketFmt]     = useState({ text: 'JSON', bg: '#ff2f6d' })
-  const [fileLabel, setFileLabel]     = useState('DTE_Emitido.json')
   
-  // Nuevos estados
-  const [viewMode, setViewMode]       = useState('landing') // 'landing' | 'red-contable'
+  const [viewMode, setViewMode]       = useState('landing')
   const [menuOpen, setMenuOpen]       = useState(false)
 
-  // Cambio de vista con scroll al top
   const changeView = (view) => {
     setViewMode(view)
     setMenuOpen(false)
     window.scrollTo({ top: 0, behavior: 'instant' })
   }
 
-  // Animaciones (solo corren si estamos en landing)
+  // Animaciones de la píldora nativas
   useEffect(() => {
     if (viewMode !== 'landing') return
     const words = document.querySelectorAll('.word')
@@ -58,20 +54,7 @@ export default function Home() {
     return () => clearInterval(tick)
   }, [viewMode])
 
-  useEffect(() => {
-    const fmts   = ['JSON', 'XLS', 'PDF']
-    const labels = ['DTE_Emitido.json', 'Reporte_Mensual.xls', 'Factura_Fiscal.pdf']
-    const colors = ['#ff2f6d', '#10b981', '#2563eb']
-    let idx = 0
-    const iv = setInterval(() => {
-      idx = (idx + 1) % fmts.length
-      setPacketFmt({ text: fmts[idx], bg: colors[idx] })
-      setFileLabel(labels[idx])
-    }, 3000)
-    return () => clearInterval(iv)
-  }, [])
-
-  // Carrusel
+  // Carrusel nativo
   const carouselRef = useRef(null)
   const trackRef    = useRef(null)
   useEffect(() => {
@@ -107,17 +90,17 @@ export default function Home() {
     return () => clearTimeout(timeout)
   }, [viewMode])
 
-  // Reveal
+  // Reveal en Scroll
   useEffect(() => {
     const els = document.querySelectorAll('.reveal')
-    const obs = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible') }), { threshold: 0.12 })
+    const obs = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible') }), { threshold: 0.14 })
     els.forEach(el => obs.observe(el))
     return () => obs.disconnect()
   }, [viewMode])
 
   const toggleExpand = plan => setExpanded(p => ({ ...p, [plan]: !p[plan] }))
 
-  // Manejo de Resend
+  // Manejo de Resend via API
   const handleContact = async e => {
     e.preventDefault()
     const f = e.target
@@ -132,12 +115,13 @@ export default function Home() {
       setFormStatus('¡Mensaje enviado exitosamente!')
       f.reset()
     } catch {
-      setFormStatus('Hubo un error. Por favor intenta de nuevo.')
+      setFormStatus('No pudimos enviar la solicitud. Intenta nuevamente.')
     }
   }
 
+  // Tarjeta de Precios (Fiel a tu diseño y textos)
   const PlanCard = ({ plan, label, desc, featured, badge, setupNote, setupClass = 'setup-note', features }) => {
-    const data = PRICING[plan][period]
+    const data = PRICING_DATA[plan][period]
     const visible = 5
     const isExpanded = expanded[plan]
     return (
@@ -146,22 +130,25 @@ export default function Home() {
         <h3>{label}</h3>
         <p>{desc}</p>
         <div className="price">
-          <strong>{data.monthly}</strong><span>/mes</span>
+          <strong data-price>{data.monthly}</strong><span>/mes</span>
         </div>
-        <div className="period-total">{data.total}</div>
+        <div className="period-total" data-total>{data.total}</div>
+        
         <div className={setupClass} dangerouslySetInnerHTML={{ __html: setupNote }} />
-        <ul className="feature-list">
+        
+        <ul className="feature-list" data-visible-items="5">
           {features.map((f, i) => (
-            <li key={i} style={{ display: !isExpanded && i >= visible ? 'none' : 'flex' }}>{f}</li>
+            <li key={i} className={!isExpanded && i >= visible ? 'is-hidden' : ''}>{f}</li>
           ))}
         </ul>
+        
         {features.length > visible && (
           <button className="show-more-btn" onClick={() => toggleExpand(plan)}>
             {isExpanded ? 'Ver menos' : 'Ver más'}
           </button>
         )}
         <br />
-        <button className={featured ? 'btn-soft' : 'btn-pink'} style={{ marginTop: 12 }} onClick={() => window.location.href = SIGNUP_URL}>
+        <button className={featured ? 'btn-soft' : 'btn-pink'} onClick={() => window.location.href = SIGNUP_URL}>
           {featured ? 'Elegir PYME' : 'Comenzar'}
         </button>
       </article>
@@ -178,14 +165,12 @@ export default function Home() {
       </div>
 
       <div className="page-shell">
-        {/* NAV LIQUID GLASS */}
-        <nav className="nav" aria-label="Navegación principal">
+        {/* LIQUID GLASS HEADER */}
+        <nav className="nav">
           <div className="nav-inner">
-            <button onClick={() => changeView('landing')} className="logo-btn" aria-label="DTEzen inicio">
+            <button onClick={() => changeView('landing')} className="logo-btn">
               <img src="/logo.png" alt="DTEzen" className="logo-img" />
             </button>
-            
-            {/* Desktop Links */}
             <div className="nav-links">
               {viewMode === 'landing' ? (
                 <>
@@ -197,10 +182,8 @@ export default function Home() {
                 <button onClick={() => changeView('landing')} className="nav-btn">← Volver a Facturación</button>
               )}
             </div>
-            
             <a href={LOGIN_URL} className="btn-dark desktop-login">Inicia Sesión</a>
             
-            {/* Hamburger Icon */}
             <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
               <span className={`bar ${menuOpen ? 'open' : ''}`}></span>
               <span className={`bar ${menuOpen ? 'open' : ''}`}></span>
@@ -208,23 +191,22 @@ export default function Home() {
             </button>
           </div>
           
-          {/* Mobile Menu */}
           {menuOpen && (
             <div className="mobile-menu">
               <button onClick={() => changeView('landing')} className="mob-link">Facturación DTE</button>
               <button onClick={() => changeView('red-contable')} className="mob-link nav-accent">Red Contable</button>
-              <a href={LOGIN_URL} className="btn-dark">Inicia Sesión</a>
+              <a href={LOGIN_URL} className="btn-dark" style={{textAlign: 'center', display: 'block'}}>Inicia Sesión</a>
             </div>
           )}
         </nav>
 
-        {/* ─── VISTA: LANDING PAGE ─── */}
         {viewMode === 'landing' && (
           <div className="view-transition">
+            
             <header className="hero">
               <div className="hero-content reveal">
                 <h1 className="hero-title">
-                  <span style={{ color: '#000' }}>Facturación digital</span>
+                  <span className="static-text2">Facturación digital</span>
                   <span className="static-text">que funciona como</span>
                   <span className="animated-text-wrapper color-1" id="pillContainer">
                     <span className="animated-text">
@@ -236,7 +218,7 @@ export default function Home() {
                   </span>
                 </h1>
                 <p className="hero-subtitle">
-                  La forma más simple y moderna de emitir DTEs, operar tu negocio y cumplir con el Ministerio de Hacienda en El Salvador.
+                  La forma más simple y moderna de emitir DTEs, operar tu negocio y cumplir con Hacienda.
                 </p>
                 <div className="hero-actions">
                   <button className="btn-dark" onClick={() => window.location.href = SIGNUP_URL}>Comienza Hoy →</button>
@@ -245,233 +227,268 @@ export default function Home() {
               </div>
             </header>
 
-            <section className="section" aria-labelledby="erp-heading">
+            <section className="section">
               <div className="section-header reveal">
                 <span className="eyebrow">Más que facturación</span>
-                <h2 id="erp-heading">Administra tu empresa desde un solo lugar</h2>
+                <h2>Administra tu empresa desde un solo lugar</h2>
                 <p>DTEzen combina facturación electrónica, inventario, clientes, proveedores, cotizaciones y acceso contable en una experiencia simple y moderna.</p>
               </div>
+
               <div className="erp-showcase reveal">
-                <div className="glow glow-one" aria-hidden="true" />
-                <div className="glow glow-two" aria-hidden="true" />
+                <div className="glow glow-one" />
+                <div className="glow glow-two" />
+
                 <div className="carousel-shell">
-                  <button className="carousel-arrow left" onClick={() => window.moveErpCarousel?.(-1)} aria-label="Anterior">‹</button>
+                  <button className="carousel-arrow left" type="button" onClick={() => window.moveErpCarousel?.(-1)}>‹</button>
                   <div className="erp-carousel" ref={carouselRef}>
                     <div className="erp-track" ref={trackRef}>
-                      {[
-                        { icon: '📊', title: 'Portal Mi Contador', desc: 'Comparte información fiscal y documentos clave con tu contador.', dark: true },
-                        { icon: '📦', title: 'Inventario', desc: 'Controla productos, existencias y movimientos sin complicaciones.' },
-                        { icon: '👥', title: 'Clientes', desc: 'Centraliza tu cartera de clientes y agiliza cada emisión.' },
-                        { icon: '🧑‍💼', title: 'Empleados', desc: 'Administra usuarios, permisos y actividad dentro de tu empresa.' },
-                        { icon: '📝', title: 'Cotizaciones', desc: 'Crea propuestas profesionales antes de convertirlas en DTEs.' },
-                        { icon: '🚚', title: 'Proveedores', desc: 'Organiza compras, contactos y operaciones clave de tu negocio.' },
-                      ].map((c, i) => (
-                        <article key={i} className={`erp-card${c.dark ? ' accountant' : ''}`}>
-                          <div className="erp-icon">{c.icon}</div>
-                          <h3>{c.title}</h3>
-                          <p>{c.desc}</p>
-                        </article>
-                      ))}
+                      <article className="erp-card accountant">
+                        <div className="erp-icon">📊</div>
+                        <h3>Portal Mi Contador</h3>
+                        <p>Comparte información fiscal y documentos clave con tu contador.</p>
+                      </article>
+                      <article className="erp-card">
+                        <div className="erp-icon">📦</div>
+                        <h3>Inventario</h3>
+                        <p>Controla productos, existencias y movimientos sin complicaciones.</p>
+                      </article>
+                      <article className="erp-card">
+                        <div className="erp-icon">👥</div>
+                        <h3>Clientes</h3>
+                        <p>Centraliza tu cartera de clientes y agiliza cada emisión.</p>
+                      </article>
+                      <article className="erp-card">
+                        <div className="erp-icon">🧑‍💼</div>
+                        <h3>Empleados</h3>
+                        <p>Administra usuarios, permisos y actividad dentro de tu empresa.</p>
+                      </article>
+                      <article className="erp-card">
+                        <div className="erp-icon">📝</div>
+                        <h3>Cotizaciones</h3>
+                        <p>Crea propuestas profesionales antes de convertirlas en DTEs.</p>
+                      </article>
+                      <article className="erp-card">
+                        <div className="erp-icon">🚚</div>
+                        <h3>Proveedores</h3>
+                        <p>Organiza compras, contactos y operaciones clave de tu negocio.</p>
+                      </article>
                     </div>
                   </div>
-                  <button className="carousel-arrow right" onClick={() => window.moveErpCarousel?.(1)} aria-label="Siguiente">›</button>
+                  <button className="carousel-arrow right" type="button" onClick={() => window.moveErpCarousel?.(1)}>›</button>
                 </div>
+
                 <div className="accountant-spotlight">
                   <div>
                     <span className="tag-new">NUEVO</span>
                     <h3>Portal Mi Contador</h3>
                     <p>Dale acceso ordenado a tu contador para consultar DTEs, documentos, ventas, compras y reportes sin pedirte archivos por WhatsApp ni físicos.</p>
                   </div>
-                  <div className="mini-dashboard" aria-hidden="true">
-                    <div className="mini-top" />
-                    <div className="mini-row" />
-                    <div className="mini-row short" />
+                  <div className="mini-dashboard">
+                    <div className="mini-top"></div>
+                    <div className="mini-row"></div>
+                    <div className="mini-row short"></div>
                     <div className="mini-grid">
                       <b>$12,450</b>
                       <b>128 DTEs</b>
                     </div>
                   </div>
                 </div>
-                <div style={{ marginTop: 24, textAlign: 'center' }}>
-                  <button className="show-more-btn2" onClick={() => changeView('red-contable')}>
+                
+                <div style={{ marginTop: 24, textAlign: 'center', alignSelf: 'center' }}>
+                  <button className="show-more-btn2" onClick={() => changeView('red-contable')} style={{ cursor: 'pointer' }}>
                     Conocer la Red Contable →
                   </button>
                 </div>
               </div>
             </section>
 
-            <section className="smart-ops-section" aria-labelledby="smartops-heading">
+            <section className="smart-ops-section">
               <div className="smart-ops-header">
-                <span className="badge-pill">Plataforma inteligente</span>
-                <h2 id="smartops-heading">Todo tu negocio, asistido por tecnología más inteligente</h2>
+                <h2>Todo tu negocio, asistido por tecnología más inteligente</h2>
+                <p>DTEzen combina facturación electrónica, operación empresarial y asistencia con IA para ayudarte a trabajar con más orden, velocidad y claridad.</p>
               </div>
+
               <div className="smart-ops-grid">
                 <article className="smart-card smart-card-large">
                   <div className="card-text">
                     <h3>Gestión empresarial completa</h3>
-                    <p>Factura, administra clientes, proveedores, empleados e inventario.</p>
+                    <p>Factura, administra clientes, proveedores, empleados e inventario desde una sola plataforma.</p>
                   </div>
-                  <div className="visual-container ecosystem-visual" aria-hidden="true">
+                  <div className="visual-container ecosystem-visual">
                     <div className="ecosystem-center">Empresa</div>
                     <div className="eco-node eco-1">Facturación</div>
                     <div className="eco-node eco-2">Clientes</div>
                     <div className="eco-node eco-3">Proveedores</div>
                     <div className="eco-node eco-4">Empleados</div>
                     <div className="eco-node eco-5">Inventario</div>
+                    <svg className="eco-lines" viewBox="0 0 200 200">
+                      <line x1="100" y1="100" x2="100" y2="35" />
+                      <line x1="100" y1="100" x2="40" y2="75" />
+                      <line x1="100" y1="100" x2="60" y2="155" />
+                      <line x1="100" y1="100" x2="140" y2="155" />
+                      <line x1="100" y1="100" x2="160" y2="75" />
+                    </svg>
                   </div>
                 </article>
+
                 <article className="smart-card ai-card">
                   <div className="card-text">
                     <h3>Procesos impulsados por IA</h3>
+                    <p>Optimiza tus flujos operativos de extremo a extremo con el respaldo de nuestro asistente virtual inteligente.</p>
                   </div>
-                  <div className="visual-container ai-visual-modern" aria-hidden="true">
+                  <div className="visual-container ai-visual-modern">
                     <div className="ai-glow-orbit">
-                      <div className="ai-center-core"><span className="ai-text-brand">IA</span></div>
+                      <div className="ai-center-core">
+                        <span className="ai-text-brand">IA</span>
+                      </div>
+                      <span className="sparkle sp-1">✦</span>
+                      <span className="sparkle sp-2">✦</span>
                     </div>
                   </div>
                 </article>
+
                 <article className="smart-card">
                   <div className="card-text">
-                    <h3>DTEs seguros JSON</h3>
+                    <h3>DTEs seguros</h3>
+                    <p>Emisión digital lista para cumplimiento fiscal y almacenamiento ordenado.</p>
                   </div>
-                  <div className="visual-container" aria-hidden="true">
-                    <div className="invoice-sheet"><div className="format-json">✓ JSON</div></div>
+                  <div className="visual-container dte-visual-modern">
+                    <div className="invoice-sheet">
+                      <div className="sheet-header"></div>
+                      <div className="sheet-body">
+                        <div className="sheet-line"></div>
+                        <div className="sheet-line w-70"></div>
+                      </div>
+                      <div className="format-json">✓ JSON</div>
+                    </div>
+                  </div>
+                </article>
+
+                <article className="smart-card">
+                  <div className="card-text">
+                    <h3>Automatización</h3>
+                    <p>Reduce pasos manuales en reportes, respaldos y seguimiento operativo.</p>
+                  </div>
+                  <div className="visual-container workflow-visual">
+                    <svg className="wf-svg-container" viewBox="0 0 200 100">
+                      <path d="M 40 70 L 100 30 L 160 70" fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="3" strokeLinecap="round"/>
+                      <path className="worm-path" d="M 40 70 L 100 30 L 160 70" fill="none" stroke="url(#worm-gradient)" strokeWidth="3" strokeLinecap="round"/>
+                      <defs>
+                        <linearGradient id="worm-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="#ff2f6d" />
+                          <stop offset="100%" stopColor="#3b82f6" />
+                        </linearGradient>
+                      </defs>
+                    </svg>
+                    <div className="wf-node wf-1"><div className="wf-pulse step-1"></div></div>
+                    <div className="wf-node wf-2"><div className="wf-pulse step-2"></div></div>
+                    <div className="wf-node wf-3"><div className="wf-pulse step-3"></div></div>
+                  </div>
+                </article>
+
+                <article className="smart-card">
+                  <div className="card-text">
+                    <h3>Reportes claros</h3>
+                    <p>Consulta actividad, ventas y documentos desde vistas limpias y accionables.</p>
+                  </div>
+                  <div className="visual-container chart-visual-modern">
+                    <div className="chart-bars">
+                      <div className="bar" style={{ "--h": "40%", "--c": "#4f46e5" }}></div>
+                      <div className="bar" style={{ "--h": "85%", "--c": "#ff2f6d" }}></div>
+                      <div className="bar" style={{ "--h": "60%", "--c": "#2563eb" }}></div>
+                    </div>
+                  </div>
+                </article>
+
+                <article className="smart-card">
+                  <div className="card-text">
+                    <h3>Acceso contable</h3>
+                    <p>Tu contador puede consultar todo sin pedirte capturas o carpetas sueltas.</p>
+                  </div>
+                  <div className="visual-container sync-visual-modern">
+                    <div className="mockup-panel">
+                      <div className="mockup-row"><span className="m-dot m-green"></span><div className="m-line long"></div></div>
+                      <div className="mockup-row"><span className="m-dot m-blue"></span><div className="m-line mid"></div></div>
+                      <div className="mockup-row"><span className="m-dot m-pink"></span><div className="m-line short"></div></div>
+                    </div>
+                    <div className="sync-arrows-container">
+                      <span className="arrow-icon to-right">→</span>
+                      <span className="arrow-icon to-left">←</span>
+                    </div>
+                    <div className="mockup-panel">
+                      <div className="mockup-row"><span className="m-dot m-green"></span><div className="m-line long"></div></div>
+                      <div className="mockup-row"><span className="m-dot m-blue"></span><div className="m-line mid"></div></div>
+                      <div className="mockup-row"><span className="m-dot m-pink"></span><div className="m-line short"></div></div>
+                    </div>
                   </div>
                 </article>
               </div>
             </section>
 
-            <section className="country-section" aria-labelledby="country-heading">
+            <section className="country-section">
               <div className="country-inner reveal">
-                <h2 id="country-heading">Solución moderna en <span>El Salvador 🇸🇻</span></h2>
-                <div className="doc-orbit" aria-hidden="true">
-                  <div className="doc-card" /><div className="doc-card" /><div className="doc-card" />
+                <h2>Tu solución moderna de facturación electrónica en <span>El Salvador 🇸🇻</span></h2>
+                <p>Diseñada para pequeñas, medianas y grandes empresas que quieren cumplir con Hacienda sin complicarse.</p>
+
+                <div className="doc-orbit">
+                  <div className="doc-card"></div>
+                  <div className="doc-card"></div>
+                  <div className="doc-card"></div>
                 </div>
               </div>
             </section>
 
-            <section className="section pricing" id="pricing" aria-labelledby="pricing-heading">
+            <section className="section pricing" id="pricing">
               <div className="section-header reveal">
                 <span className="eyebrow">Planes</span>
-                <h2 id="pricing-heading">Crecen con tu negocio</h2>
+                <h2>Planes que crecen con tu negocio</h2>
+                <p>Precios transparentes para iniciar con orden y escalar cuando lo necesites.</p>
               </div>
+
               <div className="billing-toggle">
                 {[['quarterly','Trimestral',null],['semiannual','Semestral','5% Ahorro'],['annual','Anual','Mejor Valor ✨']].map(([p,label,badge]) => (
-                  <button key={p} className={`billing-option${period === p ? ' active' : ''}`} onClick={() => setPeriod(p)}>
-                    {label}{badge && <span>{badge}</span>}
+                  <button key={p} className={`billing-option ${period === p ? 'active' : ''}`} onClick={() => setPeriod(p)}>
+                    {label} {badge && <span>{badge}</span>}
                   </button>
                 ))}
               </div>
+
               <div className="pricing-grid reveal">
                 <PlanCard
                   plan="essential" label="Esencial Zen" desc="Ideal para emprendedores"
-                  setupNote="Implementación: $145 + IVA<span>Único pago inicial</span>"
-                  features={['2 usuarios','160 DTEs/mes','Gestión de certificado','Inventario y clientes']}
+                  setupNote="Implementación y activación: $145 + IVA<br><span>Único pago de configuración inicial</span>"
+                  features={['Hasta 2 usuarios','160 DTEs al mes ($0.10 por DTE adicional)','Trámite y gestión de certificado y pruebas requeridas (para nuevos emisores)','Control de inventario, clientes, empleados y proveedores.','Anulación de DTEs','Almacenamiento seguro en AWS hasta x 10 años o más','Sistema de contingencia automático','Logo personalizado en tus DTEs','Correo automático con (PDF Y JSON) a tus clientes','Gestión de sucursales']}
                 />
                 <PlanCard
-                  plan="pyme" label="PYME Zen" desc="Para pymes en expansión" featured badge="Más popular"
-                  setupNote="Implementación: $89 + IVA<span>Único pago inicial</span>"
-                  features={['6 usuarios','400 DTEs/mes','Gestión de certificado','Portal Mi Contador', 'Control empleados']}
+                  plan="pyme" label="PYME Zen" desc="Perfecto para pymes en expansión" featured badge="Más popular"
+                  setupNote="Implementación y activación: $89 + IVA<br><span>Único pago de configuración inicial</span>"
+                  features={['Hasta 6 usuarios','400 DTEs al mes ($0.08 por DTE adicional)','Trámite y gestión de certificado y pruebas requeridas (para nuevos emisores)','Control de inventario, clientes, empleados y proveedores.','Anulación de DTEs','Almacenamiento seguro en AWS hasta x 10 años o más','Sistema de contingencia automático','Logo personalizado en tus DTEs','Correo automático con (PDF Y JSON) a tus clientes','Gestión de sucursales','Sistema de alertas de inventario','Reporte de ventas','Portal "MI CONTADOR"','Sistema de control de actividad de empleados']}
                 />
                 <PlanCard
-                  plan="maxima" label="Máxima Zen" desc="Empresas consolidadas"
-                  setupNote="Implementación prioritaria incluida<span>Sin pago adicional</span>" setupClass="setup-note-max"
-                  features={['Ilimitados','DTEs ilimitados','Cotizaciones', 'Inteligencia Artificial']}
+                  plan="maxima" label="Máxima Zen" desc="Para empresas más consolidadas y de alto flujo"
+                  setupNote="Implementación prioritaria incluida<br><span>Sin pago adicional de activación</span>" setupClass="setup-note-max"
+                  features={['Usuarios ilimitados','DTEs ilimitados','Trámite y gestión de certificado y pruebas requeridas (para nuevos emisores)','Control de inventario, clientes, empleados y proveedores.','Anulación de DTEs','Almacenamiento seguro en AWS hasta x 10 años o más','Sistema de contingencia automático','Logo personalizado en tus DTEs','Correo automático con (PDF Y JSON) a tus clientes','Gestión de sucursales','Sistema de alertas de inventario','Reporte de ventas','Portal "MI CONTADOR"','Sistema de control de actividad de empleados','Sistema de Creación y Envío de Cotizaciones','Procesos Mejorados con Inteligencia Artificial','Asistencia personalizada']}
                 />
               </div>
             </section>
           </div>
         )}
 
-        {/* ─── VISTA: RED CONTABLE (Como si fuera otra página) ─── */}
+        {/* ── VISTA SIMULADA: RED CONTABLE ── */}
         {viewMode === 'red-contable' && (
-          <div className="view-transition">
-            <section className="hero" style={{ minHeight: 'auto', paddingBottom: 40, marginTop: 120 }}>
-              <div className="hero-content reveal">
-                <span className="rc-eyebrow">Red Contable DTEzen</span>
-                <h1 className="hero-title" style={{ fontSize: 'clamp(40px, 6vw, 70px)' }}>Sincronización total con tu Despacho</h1>
-                <p className="hero-subtitle">Una infraestructura digital que automatiza la relación fiscal entre clientes y contadores.</p>
-              </div>
-            </section>
-
-            <section className="red-contable-section" style={{ paddingTop: 60 }}>
-              <div className="rc-grid reveal">
-                <div className="rc-text">
-                  <h3>Opera con claridad. Incentiva el cumplimiento.</h3>
-                  <p>Al activar la Red Contable, creas un ecosistema interconectado donde la información fluye sin fricciones.</p>
-                  <div className="rc-bullets">
-                    <div className="rc-bullet">
-                      <div className="rc-bullet-icon blue">🔗</div>
-                      <div className="rc-bullet-text">
-                        <strong>Código único de aliado</strong>
-                        <span>Cada empresa queda enlazada automáticamente a tu panel.</span>
-                      </div>
-                    </div>
-                    <div className="rc-bullet">
-                      <div className="rc-bullet-icon pink">📄</div>
-                      <div className="rc-bullet-text">
-                        <strong>Cumplimiento automatizado</strong>
-                        <span>Acceso directo a DTEs y JSON sin pedir archivos.</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="rc-visual">
-                  <div className="code-card">
-                    <div className="code-card-top">
-                      <div className="code-dots"><span/><span/><span/></div>
-                      <span className="code-title-bar">Activación</span>
-                    </div>
-                    <div className="code-body">
-                      <span className="code-badge">RED CONTABLE ACTIVA</span>
-                      <div className="code-value-box">
-                        <span className="code-value-label">Tu código de aliado</span>
-                        <div className="code-value">DTEZEN-AL026</div>
-                      </div>
-                    </div>
-                  </div>
+          <div className="view-transition" style={{ minHeight: '80vh', padding: '120px 24px 60px' }}>
+             <div className="section-header reveal">
+                <span className="eyebrow">Red Contable DTEzen</span>
+                <h2 style={{ fontSize: 'clamp(34px, 5vw, 64px)' }}>Sincronización total con tu Contador</h2>
+                <p>Una infraestructura digital que automatiza la relación fiscal entre tu negocio y el despacho. Adiós correos sueltos y mensajes de WhatsApp a fin de mes.</p>
+                <div style={{ marginTop: 40, textAlign: 'center' }}>
+                  <button className="btn-dark" onClick={() => changeView('landing')}>← Volver a Facturación</button>
                 </div>
               </div>
-            </section>
-            
-            <section className="rc-animation-section">
-              <div className="rc-header">
-                <h2>Anatomía de la automatización</h2>
-              </div>
-              <div className="anim-workspace reveal">
-                <div className="anim-panel">
-                  <div className="anim-panel-header">
-                    <div className="anim-dot blue" />
-                    <span className="anim-panel-title">Dashboard Empresa</span>
-                  </div>
-                  <div className="anim-file">
-                    <span id="active-file-label">{fileLabel}</span>
-                    <span className="anim-file-ok">✓ Enviado</span>
-                  </div>
-                </div>
-                <div className="anim-pipeline" aria-hidden="true">
-                  <div className="packet-badge" style={{ background: packetFmt.bg }}>{packetFmt.text}</div>
-                </div>
-                <div className="anim-panel">
-                  <div className="anim-panel-header">
-                    <div className="anim-dot green" />
-                    <span className="anim-panel-title">Portal Red Contable</span>
-                  </div>
-                  <div className="anim-payout">
-                    <span className="ap-label">Clientes aliados</span>
-                    <span className="ap-value">10</span>
-                  </div>
-                </div>
-              </div>
-              
-              <div style={{ textAlign: 'center', marginTop: 80 }}>
-                <button className="btn-dark" onClick={() => changeView('landing')}>← Volver a Facturación</button>
-              </div>
-            </section>
           </div>
         )}
 
-        {/* ── CONTACT & FOOTER (Siempre visibles) ── */}
+        {/* ── FOOTER Y CONTACTO (GLOBAL) ── */}
         <section className="contact-section" id="contacto">
           <div className="contact-wrap">
             <div className="contact-copy reveal">
@@ -479,21 +496,23 @@ export default function Home() {
               <p>Escríbenos y te ayudamos a configurar tu empresa para emitir DTEs desde el primer día.</p>
             </div>
             <div className="contact-form reveal">
-              <form className="form-grid" onSubmit={handleContact}>
+              <form className="form-grid" id="contactForm" onSubmit={handleContact}>
                 <div className="field">
                   <label htmlFor="contact-name">Nombre</label>
                   <input id="contact-name" name="name" type="text" required />
                 </div>
                 <div className="field">
-                  <label htmlFor="contact-email">Correo</label>
+                  <label htmlFor="contact-email">Correo electrónico</label>
                   <input id="contact-email" name="email" type="email" required />
                 </div>
                 <div className="field">
                   <label htmlFor="contact-msg">Mensaje</label>
                   <textarea id="contact-msg" name="message" required />
                 </div>
-                <button type="submit" className="btn-dark" style={{ width: '100%', padding: '16px' }}>Enviar mensaje</button>
-                {formStatus && <p className="form-status">{formStatus}</p>}
+                <button type="submit" className="btn-dark" style={{ width: '100%' }}>
+                  Enviar mensaje →
+                </button>
+                {formStatus && <p className="form-status" id="formStatus">{formStatus}</p>}
               </form>
             </div>
           </div>
@@ -502,11 +521,11 @@ export default function Home() {
         <footer className="footer">
           <div className="footer-inner">
             <div>
-              <img src="/logo.png" alt="DTEzen" style={{ height: '40px', filter: 'brightness(0) invert(1)', marginBottom: 12 }} />
+              <img src="/logo.png" alt="DTEzen" style={{ height: '32px', filter: 'brightness(0) invert(1)', marginBottom: 12 }} />
               <p className="footer-copy">© 2026 DTEzen. Todos los derechos reservados.</p>
             </div>
             <div className="footer-col">
-              <h4>Pagos</h4>
+              <h4>Pagos procesados con</h4>
               <span className="footer-wompi"><strong>Wompi</strong></span>
             </div>
             <div className="footer-col">
@@ -515,10 +534,12 @@ export default function Home() {
             </div>
             <div className="footer-col">
               <h4>Legal</h4>
-              <a href="/terminos">Términos</a>
+              <a href="/terminos">Términos y Condiciones</a>
+              <a href="/privacidad">Política de privacidad</a>
             </div>
           </div>
         </footer>
+
       </div>
     </>
   )
