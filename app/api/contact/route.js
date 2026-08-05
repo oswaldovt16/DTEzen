@@ -1,15 +1,22 @@
 import { Resend } from 'resend'
 
-// Instancia Resend usando la variable de entorno que configurarás en Vercel
-const resend = new Resend(process.env.RESEND_API_KEY)
-
 export async function POST(request) {
+  // Movimos la inicialización ADENTRO de la función. 
+  // Así no rompe el build de Vercel y solo se ejecuta cuando hay un POST real.
+  const apiKey = process.env.RESEND_API_KEY;
+  
+  if (!apiKey) {
+    return Response.json({ success: false, error: 'API Key no configurada en el servidor' }, { status: 500 })
+  }
+
+  const resend = new Resend(apiKey);
+
   try {
     const { name, email, message } = await request.json()
 
     const data = await resend.emails.send({
-      from: 'DTEzen Web <notificaciones@dtezen.com>', // Cambia esto por tu dominio verificado en Resend si ya lo tienes
-      to: 'contacto@dtezen.com',
+      from: 'DTEzen Web <notificaciones@dtezen.com>', // Tu correo de salida verificado en Resend
+      to: 'contacto@dtezen.com',                  // A dónde llegarán los leads
       subject: `Nuevo Lead Landing: ${name}`,
       html: `
         <h2>Nuevo contacto desde la web</h2>
