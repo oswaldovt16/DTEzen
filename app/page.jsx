@@ -189,6 +189,7 @@ export default function Home() {
                   <button onClick={() => changeView('red-contable')} className="nav-accent nav-btn">Red Contable</button>
                   <a href="#pricing">Comienza Hoy</a>
                   <a href="#contacto">Contacto</a>
+                  <a href="/blog" style={{ color: '#71717a', fontWeight: 700, textDecoration: 'none', padding: '8px 14px', fontSize: 14 }}>Blog</a>
                 </>
               ) : (
                 <button onClick={() => changeView('landing')} className="nav-btn">← Volver a Facturación</button>
