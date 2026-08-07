@@ -36,7 +36,9 @@ export default function BlogPost({ meta, children }) {
       {/* Nav */}
       <nav className="nav" aria-label="Navegación">
         <div className="nav-inner">
-          <img src="/logo.png" alt="DTEzen" style={{ height: '62px', filter: 'brightness(0) invert(1)', marginBottom: 12 }} />
+          <a href="/">
+  <img src="/logo.png" alt="DTEzen" className="logo-img" />
+</a>
           <div className="nav-links">
             <a href="/#red-contable" style={{ color: '#ff2f6d', fontWeight: 700, textDecoration: 'none', padding: '8px 14px', fontSize: 14 }}>Red Contable</a>
             <a href="/blog" style={{ color: '#71717a', fontWeight: 700, textDecoration: 'none', padding: '8px 14px', fontSize: 14 }}>Blog</a>
