@@ -66,7 +66,6 @@ export default function BlogIndex() {
       <main style={{ paddingTop: 110, minHeight: '100vh', position: 'relative', zIndex: 1 }}>
         <div style={{ maxWidth: 900, margin: '0 auto', padding: '60px 24px 120px' }}>
 
-          {/* Header */}
           <div style={{ textAlign: 'center', marginBottom: 72 }}>
             <span className="eyebrow">Recursos</span>
             <h1 style={{ fontSize: 'clamp(40px, 6vw, 68px)', fontWeight: 800, letterSpacing: '-3px', lineHeight: 1.05, margin: '16px 0 20px' }}>
@@ -80,52 +79,32 @@ export default function BlogIndex() {
             </p>
           </div>
 
-          {/* Posts */}
           <div style={{ display: 'grid', gap: 24 }}>
             {posts.map((post, i) => (
-              <Link key={post.slug} href={`/blog/${post.slug}`} style={{ textDecoration: 'none' }}>
-                <article style={{
-                  background: 'rgba(255,255,255,0.82)',
-                  border: '1px solid rgba(228,228,231,0.9)',
-                  borderRadius: 28,
-                  padding: '36px 40px',
-                  backdropFilter: 'blur(18px)',
-                  boxShadow: '0 8px 40px rgba(20,20,20,0.06)',
-                  transition: 'transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s',
-                  cursor: 'pointer',
-                  display: 'grid',
-                  gridTemplateColumns: i === 0 ? '1fr' : '1fr auto',
-                  gap: 20,
-                  alignItems: 'center',
-                }}
-                  onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 20px 60px rgba(20,20,20,0.1)' }}
-                  onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 8px 40px rgba(20,20,20,0.06)' }}
-                >
-                  <div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-                      <span style={{ background: `${post.categoryColor}15`, color: post.categoryColor, border: `1px solid ${post.categoryColor}30`, padding: '4px 12px', borderRadius: 999, fontSize: 12, fontWeight: 700 }}>
-                        {post.category}
-                      </span>
-                      <span style={{ color: '#a1a1aa', fontSize: 13, fontWeight: 600 }}>{post.readTime} lectura</span>
-                      <span style={{ color: '#a1a1aa', fontSize: 13 }}>·</span>
-                      <time style={{ color: '#a1a1aa', fontSize: 13, fontWeight: 600 }} dateTime={post.date}>
-                        {new Date(post.date).toLocaleDateString('es-SV', { day: 'numeric', month: 'long', year: 'numeric' })}
-                      </time>
-                    </div>
-                    <h2 style={{ margin: '0 0 12px', fontSize: i === 0 ? 30 : 22, fontWeight: 800, letterSpacing: '-0.8px', color: '#20202a', lineHeight: 1.2 }}>
-                      {post.title}
-                    </h2>
-                    <p style={{ margin: 0, color: '#71717a', fontSize: 16, lineHeight: 1.6, maxWidth: 680 }}>
-                      {post.excerpt}
-                    </p>
+              <Link key={post.slug} href={`/blog/${post.slug}`} className="blog-post-card">
+                <article>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+                    <span style={{ background: `${post.categoryColor}15`, color: post.categoryColor, border: `1px solid ${post.categoryColor}30`, padding: '4px 12px', borderRadius: 999, fontSize: 12, fontWeight: 700 }}>
+                      {post.category}
+                    </span>
+                    <span style={{ color: '#a1a1aa', fontSize: 13, fontWeight: 600 }}>{post.readTime} lectura</span>
+                    <span style={{ color: '#a1a1aa', fontSize: 13 }}>·</span>
+                    <time style={{ color: '#a1a1aa', fontSize: 13, fontWeight: 600 }} dateTime={post.date}>
+                      {new Date(post.date).toLocaleDateString('es-SV', { day: 'numeric', month: 'long', year: 'numeric' })}
+                    </time>
                   </div>
-                  <div style={{ color: '#2563eb', fontSize: 24, fontWeight: 700, flexShrink: 0 }}>→</div>
+                  <h2 style={{ margin: '0 0 12px', fontSize: i === 0 ? 30 : 22, fontWeight: 800, letterSpacing: '-0.8px', color: '#20202a', lineHeight: 1.2 }}>
+                    {post.title}
+                  </h2>
+                  <p style={{ margin: 0, color: '#71717a', fontSize: 16, lineHeight: 1.6 }}>
+                    {post.excerpt}
+                  </p>
                 </article>
+                <div style={{ color: '#2563eb', fontSize: 24, fontWeight: 700, flexShrink: 0 }}>→</div>
               </Link>
             ))}
           </div>
 
-          {/* CTA */}
           <div style={{
             marginTop: 72,
             background: '#18181b',
@@ -158,6 +137,25 @@ export default function BlogIndex() {
         .b1 { width: 600px; height: 600px; background: radial-gradient(circle, rgba(174,147,255,.6), transparent); top: -10%; left: -5%; animation: bf1 18s ease-in-out infinite; }
         .b2 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(118,226,246,.5), transparent); bottom: 10%; right: -5%; animation: bf1 22s ease-in-out infinite reverse; }
         @keyframes bf1 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(40px,-40px)} }
+
+        .blog-post-card {
+          text-decoration: none;
+          background: rgba(255,255,255,0.82);
+          border: 1px solid rgba(228,228,231,0.9);
+          border-radius: 28px;
+          padding: 36px 40px;
+          backdrop-filter: blur(18px);
+          box-shadow: 0 8px 40px rgba(20,20,20,0.06);
+          display: flex;
+          gap: 20px;
+          align-items: center;
+          transition: transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s;
+        }
+        .blog-post-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 20px 60px rgba(20,20,20,0.1);
+        }
+        .blog-post-card article { flex: 1; }
       `}</style>
     </>
   )
