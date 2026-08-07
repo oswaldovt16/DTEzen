@@ -67,7 +67,6 @@ export default function BlogIndex() {
         <div style={{ maxWidth: 900, margin: '0 auto', padding: '60px 24px 120px' }}>
 
           <div style={{ textAlign: 'center', marginBottom: 72 }}>
-            <span className="eyebrow">Recursos</span>
             <h1 style={{ fontSize: 'clamp(40px, 6vw, 68px)', fontWeight: 800, letterSpacing: '-3px', lineHeight: 1.05, margin: '16px 0 20px' }}>
               Todo sobre facturación<br />
               <span style={{ background: 'linear-gradient(135deg, #2563eb, #8b5cf6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
@@ -122,7 +121,7 @@ export default function BlogIndex() {
               <p style={{ color: 'rgba(255,255,255,.7)', fontSize: 18, margin: '0 0 32px', lineHeight: 1.5 }}>
                 Empieza hoy. Configuración en minutos, soporte incluido.
               </p>
-              <a href="https://www.dtezen.com/version-test/registro?view=signup" className="btn-dark" style={{ background: '#ff2f6d', display: 'inline-flex', fontSize: 16, padding: '16px 36px' }}>
+              <a href="https://app.dtezen.com/registro?view=signup" className="btn-dark" style={{ background: '#ff2f6d', display: 'inline-flex', fontSize: 16, padding: '16px 36px' }}>
                 Comenzar hoy →
               </a>
             </div>
