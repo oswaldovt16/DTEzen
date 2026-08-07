@@ -51,15 +51,15 @@ export default function BlogIndex() {
 
       <nav className="nav" aria-label="Navegación">
         <div className="nav-inner">
-          <a href="/" className="logo">
-            <strong>DTE</strong><span style={{ color: '#71717a', fontWeight: 400 }}>zen</span>
-          </a>
+          <button onClick={() => changeView('landing')} className="logo-btn">
+              <img src="/logo.png" alt="DTEzen" className="logo-img" />
+            </button>
           <div className="nav-links">
             <a href="/#red-contable" style={{ color: '#ff2f6d', fontWeight: 700, textDecoration: 'none', padding: '8px 14px', fontSize: 14 }}>Red Contable</a>
             <a href="/#pricing" style={{ color: '#71717a', fontWeight: 700, textDecoration: 'none', padding: '8px 14px', fontSize: 14 }}>Planes</a>
             <a href="/blog" style={{ color: '#20202a', fontWeight: 700, textDecoration: 'none', padding: '8px 14px', fontSize: 14 }}>Blog</a>
           </div>
-          <a href="https://www.dtezen.com/version-test/registro?view=signup" className="btn-dark">Comienza Gratis</a>
+          <a href="https://app.dtezen.com/registro?view=signup" className="btn-dark">Comienza Hoy</a>
         </div>
       </nav>
 
@@ -123,7 +123,7 @@ export default function BlogIndex() {
                 Empieza hoy. Configuración en minutos, soporte incluido.
               </p>
               <a href="https://www.dtezen.com/version-test/registro?view=signup" className="btn-dark" style={{ background: '#ff2f6d', display: 'inline-flex', fontSize: 16, padding: '16px 36px' }}>
-                Comenzar gratis →
+                Comenzar hoy →
               </a>
             </div>
           </div>
