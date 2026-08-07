@@ -36,13 +36,13 @@ export default function BlogPost({ meta, children }) {
       {/* Nav */}
       <nav className="nav" aria-label="Navegación">
         <div className="nav-inner">
-          <a href="/" className="logo"><strong>DTE</strong><span style={{ color: '#71717a', fontWeight: 400 }}>zen</span></a>
+          <img src="/logo.png" alt="DTEzen" style={{ height: '62px', filter: 'brightness(0) invert(1)', marginBottom: 12 }} />
           <div className="nav-links">
             <a href="/#red-contable" style={{ color: '#ff2f6d', fontWeight: 700, textDecoration: 'none', padding: '8px 14px', fontSize: 14 }}>Red Contable</a>
             <a href="/blog" style={{ color: '#71717a', fontWeight: 700, textDecoration: 'none', padding: '8px 14px', fontSize: 14 }}>Blog</a>
             <a href="/#pricing" style={{ color: '#71717a', fontWeight: 700, textDecoration: 'none', padding: '8px 14px', fontSize: 14 }}>Planes</a>
           </div>
-          <a href={SIGNUP_URL} className="btn-dark">Comienza Gratis</a>
+          <a href={SIGNUP_URL} className="btn-dark">Comienza Hoy</a>
         </div>
       </nav>
 
@@ -147,7 +147,7 @@ export default function BlogPost({ meta, children }) {
                   Desde $11/mes. Configuración en minutos.
                 </p>
                 <a href={SIGNUP_URL} style={{ display: 'block', background: '#ff2f6d', color: 'white', textDecoration: 'none', textAlign: 'center', padding: '12px 20px', borderRadius: 14, fontWeight: 900, fontSize: 14, transition: '.2s' }}>
-                  Crear cuenta gratis
+                  Crear cuenta
                 </a>
               </div>
             </div>
@@ -159,16 +159,16 @@ export default function BlogPost({ meta, children }) {
       <footer className="footer" style={{ position: 'relative', zIndex: 1 }}>
         <div className="footer-inner">
           <div>
-            <a href="/" className="footer-logo"><strong>DTE</strong><span className="zen">zen</span></a>
+            <img src="/logo.png" alt="DTEzen" style={{ height: '62px', filter: 'brightness(0) invert(1)', marginBottom: 12 }} />
             <p className="footer-copy">© 2026 DTEzen. Todos los derechos reservados.</p>
           </div>
           <div className="footer-col"><h4>Pagos</h4><span style={{ color: '#a1a1aa', fontWeight: 800 }}>Wompi</span></div>
           <div className="footer-col"><h4>Contacto</h4><a href="mailto:contacto@dtezen.com">contacto@dtezen.com</a></div>
           <div className="footer-col">
-            <h4>Legal</h4>
-            <a href="/terminos">Términos y Condiciones</a>
-            <a href="/privacidad">Política de privacidad</a>
-          </div>
+              <h4>Legal</h4>
+              <a href="https://app.dtezen.com/terminos">Términos y Condiciones</a>
+              <a href="https://app.dtezen.com/privacidad">Política de privacidad</a>
+            </div>
         </div>
         <div className="footer-divider" />
         <div className="footer-bottom">Software de facturación electrónica DTE para El Salvador · Ministerio de Hacienda homologado</div>
