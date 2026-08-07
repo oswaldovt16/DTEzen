@@ -51,9 +51,9 @@ export default function BlogIndex() {
 
       <nav className="nav" aria-label="Navegación">
         <div className="nav-inner">
-          <button onClick={() => changeView('landing')} className="logo-btn">
-              <img src="/logo.png" alt="DTEzen" className="logo-img" />
-            </button>
+          <a href="/">
+  <img src="/logo.png" alt="DTEzen" className="logo-img" />
+</a>
           <div className="nav-links">
             <a href="/#red-contable" style={{ color: '#ff2f6d', fontWeight: 700, textDecoration: 'none', padding: '8px 14px', fontSize: 14 }}>Red Contable</a>
             <a href="/#pricing" style={{ color: '#71717a', fontWeight: 700, textDecoration: 'none', padding: '8px 14px', fontSize: 14 }}>Planes</a>
